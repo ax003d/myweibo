@@ -6,4 +6,5 @@ myweibo is a personal weibo tool.
 API_KEY: xxx
 API_SECRET: xxx
 REDIRECT_URI: xxx
+ES_INDEX: myweibo
 ```

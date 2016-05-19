@@ -5,7 +5,9 @@ import json
 from getenv import env
 from functools import wraps
 from weibo import Client
-
+from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
+from datetime import datetime
 
 dotenv.read_dotenv()
 
@@ -13,8 +15,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 API_KEY = env("API_KEY", "")
 API_SECRET = env("API_SECRET", "")
 REDIRECT_URI = env("REDIRECT_URI", "")
+ES_INDEX = env("ES_INDEX", "myweibo")
 
 client = Client(API_KEY, API_SECRET, REDIRECT_URI)
+es = Elasticsearch()
+es.indices.create(index=ES_INDEX, ignore=400)
 
 
 def authenticated(func):
@@ -43,8 +48,20 @@ def authenticated(func):
 
 @authenticated
 def welcome():
-    print client.get('users/show', uid=client.token['uid'])
-
+    try:
+        me = es.get(
+            index=ES_INDEX,
+            doc_type="users",
+            id=client.token["uid"])
+    except NotFoundError:
+        me = client.get('users/show', uid=client.token['uid'])
+        me['timestamp'] = datetime.now()
+        es.index(
+            index=ES_INDEX,
+            doc_type="users",
+            id=client.token["uid"],
+            body=me)
+    print me
 
 if __name__ == '__main__':
     welcome()
