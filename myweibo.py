@@ -1,6 +1,7 @@
 import os
 import dotenv
 import json
+import jieba.analyse
 
 from getenv import env
 from functools import wraps
@@ -52,16 +53,41 @@ def welcome():
         me = es.get(
             index=ES_INDEX,
             doc_type="users",
-            id=client.token["uid"])
+            id=client.token["uid"])['_source']
     except NotFoundError:
         me = client.get('users/show', uid=client.token['uid'])
-        me['timestamp'] = datetime.now()
+        me['timestamp'] = datetime.utcnow()
         es.index(
             index=ES_INDEX,
             doc_type="users",
             id=client.token["uid"],
             body=me)
-    print me
+    print "welcome {}!".format(me['name'])
+
+
+def index_status(status):
+    try:
+        es.get(
+            index=ES_INDEX,
+            doc_type="status",
+            id=status["id"])
+    except NotFoundError:
+        status["timestamp"] = datetime.utcnow()
+        status["tags"] = list(jieba.analyse.extract_tags(status["text"]))
+        es.index(
+            index=ES_INDEX,
+            doc_type="status",
+            id=status["id"],
+            body=status)
+
+
+@authenticated
+def status():
+    resp = client.get('statuses/friends_timeline')
+    for i in resp['statuses']:
+        index_status(i)
+
 
 if __name__ == '__main__':
-    welcome()
+    # welcome()
+    status()
