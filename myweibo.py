@@ -19,14 +19,14 @@ client = Client(API_KEY, API_SECRET, REDIRECT_URI)
 
 def authenticated(func):
     @wraps(func)
-    def authenticate(func):
+    def authenticate(*args, **kwargs):
         auth_path = os.path.join(BASE_DIR, ".auth.json")
         if os.path.exists(auth_path):
-            with open(auth_path) as f:
+            with open(auth_path, 'r') as f:
                 token = json.loads(f.read())
             client.set_token(token)
-            if client.alive():
-                return
+            if client.alive:
+                return func(*args, **kwargs)
             print "token expired"
         print "visit this url to get code:"
         print client.authorize_url
@@ -35,14 +35,15 @@ def authenticated(func):
             print "no code input, exit now!"
             exit(0)
         client.set_code(code)
-        with open(auth_path) as f:
+        with open(auth_path, 'w') as f:
             f.write(json.dumps(client.token))
+        return func(*args, **kwargs)
     return authenticate
 
 
 @authenticated
 def welcome():
-    print client.get('/users/show')
+    print client.get('users/show', uid=client.token['uid'])
 
 
 if __name__ == '__main__':
