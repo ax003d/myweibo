@@ -1,5 +1,10 @@
 myweibo is a personal weibo tool.
 
+# other components
+
+- elasticsearch:2.3
+- kibana:4.5.1
+
 # environments
 
 ```
