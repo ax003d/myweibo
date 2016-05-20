@@ -11,5 +11,6 @@ myweibo is a personal weibo tool.
 API_KEY: xxx
 API_SECRET: xxx
 REDIRECT_URI: xxx
+ES_HOSTS: ["localhost:9200"]
 ES_INDEX: myweibo
 ```

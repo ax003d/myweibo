@@ -16,10 +16,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 API_KEY = env("API_KEY", "")
 API_SECRET = env("API_SECRET", "")
 REDIRECT_URI = env("REDIRECT_URI", "")
+ES_HOSTS = env("ES_HOSTS", '["localhost:9200"]')
 ES_INDEX = env("ES_INDEX", "myweibo")
 
 client = Client(API_KEY, API_SECRET, REDIRECT_URI)
-es = Elasticsearch()
+es = Elasticsearch(ES_HOSTS)
 es.indices.create(index=ES_INDEX, ignore=400)
 
 
@@ -83,8 +84,10 @@ def index_status(status):
 
 @authenticated
 def status():
-    resp = client.get('statuses/friends_timeline')
-    for i in resp['statuses']:
+    resp = client.get('statuses/friends_timeline', count=100)
+    statuses = resp['statuses']
+    print "get {}".format(statuses)
+    for i in statuses:
         index_status(i)
 
 
