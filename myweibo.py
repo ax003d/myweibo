@@ -84,7 +84,15 @@ def index_status(status):
 
 @authenticated
 def status():
-    resp = client.get('statuses/friends_timeline', count=100)
+    try:
+        since_id = es.search(
+            index='myweibo',
+            doc_type='status',
+            sort='id:desc',
+            size=1)['hits']['hits'][0]
+    except NotFoundError:
+        since_id = 0
+    resp = client.get('statuses/friends_timeline', count=100, since_id=since_id)
     statuses = resp['statuses']
     print "get {}".format(statuses)
     for i in statuses:
