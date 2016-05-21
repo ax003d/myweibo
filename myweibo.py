@@ -18,10 +18,27 @@ API_SECRET = env("API_SECRET", "")
 REDIRECT_URI = env("REDIRECT_URI", "")
 ES_HOSTS = env("ES_HOSTS", '["localhost:9200"]')
 ES_INDEX = env("ES_INDEX", "myweibo")
+ES_MAPPINGS = {
+    "mappings": {
+        "status": {
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "analyzer": "smartcn"
+                },
+                "tags": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                }
+            }
+        }
+    }
+}
 
 client = Client(API_KEY, API_SECRET, REDIRECT_URI)
 es = Elasticsearch(ES_HOSTS)
-es.indices.create(index=ES_INDEX, ignore=400)
+if not es.indices.exists(ES_INDEX):
+    es.indices.create(index=ES_INDEX, body=ES_MAPPINGS)
 
 
 def authenticated(func):
