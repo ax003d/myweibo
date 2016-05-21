@@ -7,8 +7,8 @@ from getenv import env
 from functools import wraps
 from weibo import Client
 from elasticsearch import Elasticsearch
-from elasticsearch.exceptions import NotFoundError
-from datetime import datetime
+from elasticsearch.exceptions import NotFoundError, RequestError
+from datetime import datetime, timedelta
 
 dotenv.read_dotenv()
 
@@ -72,31 +72,48 @@ def index_status(status):
             index=ES_INDEX,
             doc_type="status",
             id=status["id"])
+        return True
     except NotFoundError:
-        status["timestamp"] = datetime.utcnow()
+        status["timestamp"] = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +0800 %Y') - timedelta(hours=8)
         status["tags"] = list(jieba.analyse.extract_tags(status["text"]))
         es.index(
             index=ES_INDEX,
             doc_type="status",
             id=status["id"],
             body=status)
+        return False
 
 
 @authenticated
-def status():
-    try:
-        since_id = es.search(
-            index='myweibo',
-            doc_type='status',
-            sort='id:desc',
-            size=1)['hits']['hits'][0]
-    except NotFoundError:
-        since_id = 0
-    resp = client.get('statuses/friends_timeline', count=100, since_id=since_id)
+def status(since_id=None, max_id=None):
+    print "status since_id {} max_id {}".format(since_id, max_id)
+    if since_id is None:
+        try:
+            since_id = es.search(
+                index='myweibo',
+                doc_type='status',
+                sort='id:desc',
+                size=1)['hits']['hits'][0]["_source"]["id"]
+        except NotFoundError:
+            since_id = 0
+        except RequestError:
+            since_id = 0
+    if max_id is None:
+        resp = client.get('statuses/friends_timeline', count=100, since_id=since_id)
+    else:
+        resp = resp = client.get('statuses/friends_timeline', count=100, since_id=since_id, max_id=max_id)
     statuses = resp['statuses']
-    print "get {}".format(statuses)
+    if len(statuses) == 0:
+        return
+
+    cnt = 0
     for i in statuses:
-        index_status(i)
+        if index_status(i):
+            cnt += 1
+    print "indexed {} status".format(len(statuses))
+    max_id = statuses[-1]["id"]
+    if cnt == 100 and since_id != 0:
+        status(since_id, max_id)
 
 
 if __name__ == '__main__':
