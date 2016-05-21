@@ -72,7 +72,7 @@ def index_status(status):
             index=ES_INDEX,
             doc_type="status",
             id=status["id"])
-        return True
+        return False
     except NotFoundError:
         status["timestamp"] = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +0800 %Y') - timedelta(hours=8)
         status["tags"] = list(jieba.analyse.extract_tags(status["text"]))
@@ -81,7 +81,7 @@ def index_status(status):
             doc_type="status",
             id=status["id"],
             body=status)
-        return False
+        return True
 
 
 @authenticated
