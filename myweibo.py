@@ -110,7 +110,7 @@ def status(since_id=None, max_id=None):
     for i in statuses:
         if index_status(i):
             cnt += 1
-    print "indexed {} status".format(len(statuses))
+    print "indexed {} status".format(cnt)
     max_id = statuses[-1]["id"]
     if cnt == 100 and since_id != 0:
         status(since_id, max_id)
