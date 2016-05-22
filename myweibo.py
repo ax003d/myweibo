@@ -29,6 +29,15 @@ ES_MAPPINGS = {
                 "tags": {
                     "type": "string",
                     "index": "not_analyzed"
+                },
+                "user": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        }
+                    }
                 }
             }
         }
