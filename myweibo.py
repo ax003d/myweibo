@@ -106,6 +106,8 @@ def index_status(status):
         status["timestamp"] = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +0800 %Y') - timedelta(hours=8)
         status["tags"] = list(
             set(jieba.analyse.extract_tags(status["text"])) - tags_ignored)
+        status["url"] = "http://api.weibo.com/2/statuses/go?uid={}&id={}".format(
+            status['user']['idstr'], status['idstr'])
         es.index(
             index=ES_INDEX,
             doc_type="status",
