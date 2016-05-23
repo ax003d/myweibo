@@ -48,6 +48,9 @@ client = Client(API_KEY, API_SECRET, REDIRECT_URI)
 es = Elasticsearch(ES_HOSTS)
 if not es.indices.exists(ES_INDEX):
     es.indices.create(index=ES_INDEX, body=ES_MAPPINGS)
+tags_ignored = set()
+with open('tagignore', 'r') as f:
+    tags_ignored = set([i.strip() for i in f.readlines()])
 
 
 def authenticated(func):
@@ -101,7 +104,8 @@ def index_status(status):
         return False
     except NotFoundError:
         status["timestamp"] = datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +0800 %Y') - timedelta(hours=8)
-        status["tags"] = list(jieba.analyse.extract_tags(status["text"]))
+        status["tags"] = list(
+            set(jieba.analyse.extract_tags(status["text"])) - tags_ignored)
         es.index(
             index=ES_INDEX,
             doc_type="status",
