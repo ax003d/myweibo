@@ -1,0 +1,21 @@
+version: '2'
+services:
+  kb:
+    image: kibana:4.5.1
+    links:
+      - es:elasticsearch
+    ports:
+      - 5601:5601
+  mwb:
+    image: daocloud.io/rzheng/myweibo:latest
+    links:
+      - es:elasticsearch
+    environment:
+      API_KEY: xxx
+      API_SECRET: xxx
+      REDIRECT_URI: xxx
+      ES_HOSTS: "['elasticsearch:9200']"
+  es:
+    image: elasticsearch:2.3
+    ports:
+      - 9200:9200
