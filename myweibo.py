@@ -50,7 +50,7 @@ if not es.indices.exists(ES_INDEX):
     es.indices.create(index=ES_INDEX, body=ES_MAPPINGS)
 tags_ignored = set()
 with open('tagignore', 'r') as f:
-    tags_ignored = set([i.strip() for i in f.readlines()])
+    tags_ignored = set([i.strip().decode('utf8') for i in f.readlines()])
 
 
 def authenticated(func):
