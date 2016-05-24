@@ -2,6 +2,8 @@ FROM daocloud.io/library/ubuntu:trusty
 
 MAINTAINER ax003d <ax003d@gmail.com>
 
+RUN cp /etc/apt/sources.list /etc/apt/sources.list_backup
+COPY sources.list /etc/apt/sources.list
 RUN apt-get update && \
     apt-get install -y python \
                        python-dev \
