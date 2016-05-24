@@ -149,5 +149,4 @@ def status(since_id=None, max_id=None):
 
 
 if __name__ == '__main__':
-    # welcome()
     status()
