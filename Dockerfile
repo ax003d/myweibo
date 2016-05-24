@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM daocloud.io/library/ubuntu:trusty
 
 MAINTAINER ax003d <ax003d@gmail.com>
 
