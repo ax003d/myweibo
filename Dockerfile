@@ -7,7 +7,7 @@ COPY sources.list /etc/apt/sources.list
 RUN apt-get update && \
     apt-get install -y python \
                        python-dev \
-                       python-pip \ 
+                       python-pip
 RUN apt-get clean && \
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 COPY scheduler /etc/cron.d/
 
 ENTRYPOINT ["cron"]
-COMMAND ["-f"]
+CMD ["-f"]
