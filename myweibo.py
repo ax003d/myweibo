@@ -38,6 +38,14 @@ ES_MAPPINGS = {
                             "index": "not_analyzed"
                         }
                     }
+                },
+                "geo": {
+                    "type": "object",
+                    "properties": {
+                        "coordinates": {
+                            "type": "geo_point"
+                        }
+                    }
                 }
             }
         }
