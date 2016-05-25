@@ -20,6 +20,7 @@ COPY myweibo.py myweibo.py
 RUN pip install -r requirements.txt
 
 COPY scheduler /etc/cron.d/
+COPY entrypoint.sh entrypoint.sh
 
-ENTRYPOINT ["cron"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["-f"]
