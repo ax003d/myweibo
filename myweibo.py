@@ -116,6 +116,9 @@ def index_status(status):
             set(jieba.analyse.extract_tags(status["text"])) - tags_ignored)
         status["url"] = "http://api.weibo.com/2/statuses/go?uid={}&id={}".format(
             status['user']['idstr'], status['idstr'])
+        geo = status['geo']
+        if geo is not None:
+            geo['coordinates'] = geo['coordinates'][::-1]
         es.index(
             index=ES_INDEX,
             doc_type="status",
