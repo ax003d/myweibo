@@ -1,6 +1,7 @@
 import os
 import dotenv
 import json
+import jieba
 import jieba.analyse
 
 from getenv import env
@@ -13,6 +14,9 @@ from datetime import datetime, timedelta
 dotenv.read_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+jieba.load_userdict(os.path.join(BASE_DIR, 'usr_dict.txt'))
+
 API_KEY = env("API_KEY", "")
 API_SECRET = env("API_SECRET", "")
 REDIRECT_URI = env("REDIRECT_URI", "")
