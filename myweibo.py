@@ -14,9 +14,7 @@ from datetime import datetime, timedelta
 dotenv.read_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-jieba.load_userdict(os.path.join(BASE_DIR, 'usr_dict.txt'))
-
+DATA_PATH = env("DATA_PATH", "/data")
 API_KEY = env("API_KEY", "")
 API_SECRET = env("API_SECRET", "")
 REDIRECT_URI = env("REDIRECT_URI", "")
@@ -60,15 +58,16 @@ client = Client(API_KEY, API_SECRET, REDIRECT_URI)
 es = Elasticsearch(ES_HOSTS)
 if not es.indices.exists(ES_INDEX):
     es.indices.create(index=ES_INDEX, body=ES_MAPPINGS)
+jieba.load_userdict(os.path.join(DATA_PATH, 'usr_dict.txt'))
 tags_ignored = set()
-with open('tagignore', 'r') as f:
-    tags_ignored = set([i.strip().decode('utf8') for i in f.readlines()])
+with open(os.path.join(DATA_PATH, 'tagignore'), 'r') as f:
+    tags_ignored.update([i.strip().decode('utf8') for i in f.readlines()])
 
 
 def authenticated(func):
     @wraps(func)
     def authenticate(*args, **kwargs):
-        auth_path = os.path.join(BASE_DIR, ".auth.json")
+        auth_path = os.path.join(DATA_PATH, ".auth.json")
         if os.path.exists(auth_path):
             with open(auth_path, 'r') as f:
                 token = json.loads(f.read())
@@ -148,7 +147,7 @@ def status(since_id=None, max_id=None):
     if max_id is None:
         resp = client.get('statuses/friends_timeline', count=100, since_id=since_id)
     else:
-        resp = resp = client.get('statuses/friends_timeline', count=100, since_id=since_id, max_id=max_id)
+        resp = client.get('statuses/friends_timeline', count=100, since_id=since_id, max_id=max_id)
     statuses = resp['statuses']
     if len(statuses) == 0:
         return

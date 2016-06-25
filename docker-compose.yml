@@ -17,6 +17,8 @@ services:
       API_SECRET: xxx
       REDIRECT_URI: xxx
       ES_HOSTS: "['elasticsearch:9200']"
+#    volumes:
+#      - /host/path:/data
   es:
     image: elasticsearch:2.3
     ports:
