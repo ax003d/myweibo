@@ -58,7 +58,9 @@ client = Client(API_KEY, API_SECRET, REDIRECT_URI)
 es = Elasticsearch(ES_HOSTS)
 if not es.indices.exists(ES_INDEX):
     es.indices.create(index=ES_INDEX, body=ES_MAPPINGS)
-jieba.load_userdict(os.path.join(DATA_PATH, 'usr_dict.txt'))
+f_usr_dict = os.path.join(DATA_PATH, 'usr_dict.txt')
+if os.path.exists(f_usr_dict):
+    jieba.load_userdict(f_usr_dict)
 tags_ignored = set()
 with open(os.path.join(DATA_PATH, 'tagignore'), 'r') as f:
     tags_ignored.update([i.strip().decode('utf8') for i in f.readlines()])
