@@ -11,7 +11,7 @@ schemes:
 paths:
   /v1/tagignore:
     post:
-      summary: Ìí¼ÓºöÂÔ¹Ø¼ü×Ö
+      summary: æ·»åŠ å¿½ç•¥å…³é”®å­—
       security:
         - api_key: []
       consumes:
@@ -28,7 +28,7 @@ paths:
                   type: string
       responses:
         "200":
-          description: ³É¹¦Ìí¼ÓºöÂÔ¹Ø¼ü×Ö
+          description: æˆåŠŸæ·»åŠ å¿½ç•¥å…³é”®å­—
 
 securityDefinitions:
   api_key:

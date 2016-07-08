@@ -1,0 +1,40 @@
+---
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: "MyWeibo API"
+host: "mw.ax003d.info"
+schemes:
+- "http"
+paths:
+  /v1/tagignore:
+    post:
+      tags:
+      - "default_controller"
+      summary: "添加忽略关键字"
+      operationId: "controllers.default_controller.v1_tagignore_post"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/body"
+      responses:
+        200:
+          description: "成功添加忽略关键字"
+      security:
+      - api_key: []
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "X-MyWeibo-API-Key"
+    in: "header"
+definitions:
+  body:
+    properties:
+      tagignore:
+        type: "array"
+        items:
+          type: "string"
