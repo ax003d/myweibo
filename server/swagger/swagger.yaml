@@ -3,7 +3,7 @@ swagger: "2.0"
 info:
   version: "0.1.0"
   title: "MyWeibo API"
-host: "mw.ax003d.info"
+host: {{ host }}
 schemes:
 - "http"
 paths:
