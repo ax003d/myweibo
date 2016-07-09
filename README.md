@@ -14,4 +14,6 @@ API_SECRET: xxx
 REDIRECT_URI: xxx
 ES_HOSTS: ["localhost:9200"]
 ES_INDEX: myweibo
+API_HOST: localhost:8080
+DATA_PATH: /data
 ```
