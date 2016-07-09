@@ -17,6 +17,7 @@ services:
       API_SECRET: xxx
       REDIRECT_URI: xxx
       ES_HOSTS: "['elasticsearch:9200']"
+      API_HOST: localhost:8080
 #    volumes:
 #      - /host/path:/data
   es:
