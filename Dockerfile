@@ -19,7 +19,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 COPY tagignore tagignore
 COPY myweibo.py myweibo.py
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple
 COPY scheduler /etc/cron.d/
 
 COPY server server
