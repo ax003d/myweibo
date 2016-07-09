@@ -23,7 +23,7 @@ RUN pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple
 COPY scheduler /etc/cron.d/
 
 COPY server server
-RUN virtualenv /env-server
+RUN virtualenv -p python3 /env-server
 RUN /env-server/bin/pip3 install -r server/requirements.txt -i http://mirrors.aliyun.com/pypi/simple
 EXPOSE 8080
 
