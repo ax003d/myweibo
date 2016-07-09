@@ -11,7 +11,7 @@ paths:
     post:
       tags:
       - "default_controller"
-      summary: "添加忽略关键字"
+      summary: "Add tags to ignore"
       operationId: "controllers.default_controller.v1_tagignore_post"
       consumes:
       - "application/json"
@@ -23,7 +23,7 @@ paths:
           $ref: "#/definitions/body"
       responses:
         200:
-          description: "成功添加忽略关键字"
+          description: "Successfully added tags ignored"
       security:
       - api_key: []
 securityDefinitions:
